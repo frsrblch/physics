@@ -1,4 +1,4 @@
-pub trait Unit : 'static + Send + Sync + Copy + PartialEq {
+pub trait Unit : 'static + Send + Sync + Copy + PartialEq + Default {
     fn symbol() -> Option<&'static str>;
 }
 

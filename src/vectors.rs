@@ -4,7 +4,7 @@ use crate::*;
 use crate::units::*;
 use crate::types::UnitVector;
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Default, PartialEq, Copy, Clone)]
 pub struct Vector<T> {
     pub x: Scalar<T>,
     pub y: Scalar<T>,
