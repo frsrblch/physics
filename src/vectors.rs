@@ -1,6 +1,5 @@
 use std::ops::*;
 use std::fmt::{Display, Formatter, Result};
-use specs::prelude::{Component, VecStorage};
 use crate::*;
 use crate::units::*;
 use crate::types::UnitVector;

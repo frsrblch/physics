@@ -1,7 +1,6 @@
 use std::ops::*;
 use std::marker::PhantomData;
 use std::fmt::{Display, Formatter, Result};
-use specs::{Component, VecStorage};
 use crate::*;
 use crate::units::*;
 
