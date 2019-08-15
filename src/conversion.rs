@@ -98,6 +98,7 @@ squares_scalar!(Meters, MetersSquared);
 squares_scalar!(Seconds, SecondsSquared);
 divide_convert_scalars!(MetersCubed, Meters, MetersSquared);
 divide_convert_scalars!(Kilograms, MetersCubed, KilogramsPerMeterCubed);
+divide_convert!(Meters, Pixels, MetersPerPixel);
 
 #[cfg(test)]
 mod tests {

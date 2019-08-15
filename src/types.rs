@@ -29,3 +29,6 @@ pub type MassRate = Scalar<KilogramsPerSecond>;
 pub type Area = Scalar<MetersSquared>;
 pub type Volume = Scalar<MetersCubed>;
 pub type Density = Scalar<KilogramsPerMeterCubed>;
+
+pub type Resolution = Vector<Pixels>;
+pub type Scale = Vector<MetersPerPixel>;
