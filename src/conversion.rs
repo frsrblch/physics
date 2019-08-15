@@ -108,6 +108,13 @@ impl Div<Scalar<MetersPerPixel>> for Vector<Meters> {
     }
 }
 
+impl Mul<Scalar<MetersPerPixel>> for Vector<Pixels> {
+    type Output = Vector<Meters>;
+    fn mul(self, rhs: Scalar<MetersPerPixel>) -> Self::Output {
+        Self::Output::from((self.x.value * rhs.value, self.y.value * rhs.value))
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
