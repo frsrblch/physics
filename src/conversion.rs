@@ -100,6 +100,15 @@ divide_convert_scalars!(MetersCubed, Meters, MetersSquared);
 divide_convert_scalars!(Kilograms, MetersCubed, KilogramsPerMeterCubed);
 divide_convert!(Meters, Pixels, MetersPerPixel);
 
+
+impl Div<Scalar<MetersPerPixel>> for Vector<Meters> {
+    type Output = Vector<Pixels>;
+    fn div(self, rhs: Scalar<MetersPerPixel>) -> Self::Output {
+        Self::Output::from((self.x.value / rhs.value, self.y.value / rhs.value))
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use crate::types::*;
@@ -184,5 +193,14 @@ mod tests {
         let expected = Area::from(2.0);
 
         assert_eq!(expected, volume / length);
+    }
+
+    #[test]
+    fn pixels() {
+        let position = Position::in_meters(2.0, 3.0);
+        let scale = Scale::from(0.5);
+        let resolution = position / scale;
+
+        assert_eq!(Resolution::from((4.0, 6.0)), resolution);
     }
 }
