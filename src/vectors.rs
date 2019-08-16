@@ -67,6 +67,12 @@ impl Vector<MetersPerSecondSquared> {
     }
 }
 
+impl Vector<Pixels> {
+    pub fn in_pixels<T: Into<Scalar<Pixels>>>(x: T, y: T) -> Resolution {
+        Vector::new(x, y)
+    }
+}
+
 impl<T: Unit> Display for Vector<T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "({}, {})", self.x, self.y)
