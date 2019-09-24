@@ -81,10 +81,22 @@ impl Add for Angle {
     }
 }
 
+impl AddAssign for Angle {
+    fn add_assign(&mut self, rhs: Self) {
+        *self = *self + rhs;
+    }
+}
+
 impl Sub for Angle {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         Self::in_radians(self.0 - rhs.0)
+    }
+}
+
+impl SubAssign for Angle {
+    fn sub_assign(&mut self, rhs: Self) {
+        *self = *self - rhs;
     }
 }
 
@@ -95,25 +107,25 @@ mod tests {
     #[test]
     fn negative_angle_wraps() {
         let angle = Angle::in_degrees(-721.0);
+        let expected = Angle::in_degrees(359.0);
 
-        assert_eq!((Angle::in_degrees(359.0).0 * MULT).floor(), (angle.0 * MULT).floor());
+        assert!((expected.0 - angle.0).abs() < 1e-10);
     }
 
     #[test]
     fn too_large_angle_reduced() {
         let angle = Angle::in_degrees(721.0);
+        let expected = Angle::in_degrees(1.0);
 
-        assert_eq!((Angle::in_degrees(1.0).0 * MULT).floor(), (angle.0 * MULT).floor());
+        assert!((expected.0 - angle.0).abs() < 1e-10);
     }
-
-    const MULT: Float = 100_000.0;
 
     #[test]
     fn mul() {
-        let angle = Angle::in_degrees(20.0);
+        let angle = Angle::in_degrees(20.0) * 2.0;
         let expected = Angle::in_degrees(40.0);
 
-        assert_eq!(expected, angle * 2.0);
+        assert!((expected.0 - angle.0).abs() < 1e-10);
     }
 
     #[test]
@@ -122,15 +134,16 @@ mod tests {
         angle *= 2.0;
         let expected = Angle::in_degrees(40.0);
 
+        assert!((expected.0 - angle.0).abs() < 1e-10);
         assert_eq!(expected, angle);
     }
 
     #[test]
     fn div() {
-        let angle = Angle::in_degrees(20.0);
+        let angle = Angle::in_degrees(20.0) / 2.0;
         let expected = Angle::in_degrees(10.0);
 
-        assert_eq!(expected, angle / 2.0);
+        assert!((expected.0 - angle.0).abs() < 1e-10);
     }
 
     #[test]
@@ -139,6 +152,56 @@ mod tests {
         angle /= 2.0;
         let expected = Angle::in_degrees(10.0);
 
-        assert_eq!(expected, angle);
+        assert!((expected.0 - angle.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn add() {
+        let angle = Angle::in_degrees(10.0) + Angle::in_degrees(5.0);
+        let expected = Angle::in_degrees(15.0);
+
+        assert!((expected.0 - angle.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn add_assign() {
+        let mut angle = Angle::in_degrees(5.0);
+        angle += Angle::in_degrees(3.0);
+        let expected = Angle::in_degrees(8.0);
+
+        assert!((expected.0 - angle.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn sub() {
+        let angle = Angle::in_degrees(5.0) - Angle::in_degrees(3.0);
+        let expected = Angle::in_degrees(2.0);
+
+        assert!((expected.0 - angle.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn sub_assign() {
+        let mut angle = Angle::in_degrees(5.0);
+        angle -= Angle::in_degrees(3.0);
+        let expected = Angle::in_degrees(2.0);
+
+        assert!((expected.0 - angle.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn add_wraps() {
+        let angle = Angle::in_degrees(350.0) + Angle::in_degrees(11.0);
+        let expected = Angle::in_degrees(1.0);
+
+        assert!((expected.0 - angle.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn sub_wraps() {
+        let angle = Angle::in_degrees(10.0) - Angle::in_degrees(11.0);
+        let expected = Angle::in_degrees(359.0);
+
+        assert!((expected.0 - angle.0).abs() < 1e-10);
     }
 }
