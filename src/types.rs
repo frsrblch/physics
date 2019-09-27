@@ -34,3 +34,4 @@ pub type Resolution = Vector<Pixels>;
 pub type Scale = Scalar<MetersPerPixel>;
 
 pub type Angle = Scalar<Radians>;
+pub type AngluarSpeed = Scalar<RadiansPerSecond>;
