@@ -99,6 +99,7 @@ squares_scalar!(Seconds, SecondsSquared);
 divide_convert_scalars!(MetersCubed, Meters, MetersSquared);
 divide_convert_scalars!(Kilograms, MetersCubed, KilogramsPerMeterCubed);
 divide_convert!(Meters, Pixels, MetersPerPixel);
+divide_convert!(Radians, Seconds, RadiansPerSecond);
 
 impl Div<Scalar<MetersPerPixel>> for Vector<Meters> {
     type Output = Vector<Pixels>;
