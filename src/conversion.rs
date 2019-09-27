@@ -100,7 +100,6 @@ divide_convert_scalars!(MetersCubed, Meters, MetersSquared);
 divide_convert_scalars!(Kilograms, MetersCubed, KilogramsPerMeterCubed);
 divide_convert!(Meters, Pixels, MetersPerPixel);
 
-
 impl Div<Scalar<MetersPerPixel>> for Vector<Meters> {
     type Output = Vector<Pixels>;
     fn div(self, rhs: Scalar<MetersPerPixel>) -> Self::Output {

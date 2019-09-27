@@ -39,3 +39,4 @@ define_unit!(KilogramsPerSecond, "kg/s");
 define_unit!(KilogramsPerMeterCubed, "kg/m³");
 define_unit!(Pixels, "px");
 define_unit!(MetersPerPixel, "m/px");
+define_unit!(Radians, "rad");

@@ -3,6 +3,7 @@ use std::marker::PhantomData;
 use std::fmt::{Display, Formatter, Result};
 use crate::*;
 use crate::units::*;
+use std::f64::consts::PI;
 
 #[derive(Debug, Default, Copy, Clone, PartialOrd)]
 pub struct Scalar<T> {
@@ -199,6 +200,24 @@ impl Scalar<MetersCubed> {
 impl Scalar<KilogramsPerMeterCubed> {
     pub fn in_kilograms_per_meter_cubed(value: Float) -> Self {
         value.into()
+    }
+}
+
+impl Scalar<Radians> {
+    pub fn in_radians(angle: Float) -> Self { angle.into() }
+
+    pub fn in_degrees(angle: Float) -> Self { Self::in_radians(angle * (PI as Float) / 180.0) }
+
+    pub fn sin(&self) -> Float {
+        self.value.sin()
+    }
+
+    pub fn cos(&self) -> Float {
+        self.value.cos()
+    }
+
+    pub fn tan(&self) -> Float {
+        self.value.tan()
     }
 }
 
