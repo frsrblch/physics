@@ -39,10 +39,9 @@ impl<T: Unit> Vector<T> {
         }
     }
 
-    pub fn rotate_cw(&self, degrees: Float) -> Self {
-        let radians = degrees * std::f64::consts::PI as Float / -180.0;
-        let cos = radians.cos();
-        let sin = radians.sin();
+    pub fn rotate_cw(&self, angle: Angle) -> Self {
+        let cos = angle.cos();
+        let sin = angle.sin();
         let x = cos * self.x - sin * self.y;
         let y = sin * self.x + cos * self.y;
         Vector::new(x, y)
