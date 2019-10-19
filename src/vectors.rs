@@ -1,7 +1,6 @@
 use std::ops::*;
 use std::fmt::{Display, Formatter, Result};
 use crate::*;
-use crate::units::*;
 use crate::types::UnitVector;
 
 #[derive(Debug, Default, PartialEq, Copy, Clone)]
@@ -148,6 +147,13 @@ impl<T> Div<Float> for Vector<T> {
     }
 }
 
+impl<T> Div<Scalar<T>> for Vector<T> {
+    type Output = Vector<Float>;
+    fn div(self, rhs: Scalar<T>) -> Self::Output {
+        Vector::from((self.x.value / rhs.value, self.y.value / rhs.value))
+    }
+}
+
 impl<T> DivAssign<Float> for Vector<T> {
     fn div_assign(&mut self, rhs: Float) {
         self.x /= rhs;
@@ -286,6 +292,14 @@ mod tests {
         let x = 5.0;
 
         assert_eq!(Position::new(0.4, 0.6), v / x);
+    }
+
+    #[test]
+    fn div_self() {
+        let position = Meters::get_vector(3.0, 5.0);
+        let length = Meters::get_scalar(2.0);
+
+        assert_eq!(position / length, Float::get_vector(1.5, 2.5));
     }
 
     #[test]

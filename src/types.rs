@@ -1,7 +1,6 @@
 use crate::*;
-use crate::units::*;
 
-pub type UnitVector = Vector<Unitless>;
+pub type UnitVector = Vector<Float>;
 
 pub type Time = Scalar<Seconds>;
 

@@ -2,7 +2,6 @@ use std::ops::*;
 use std::marker::PhantomData;
 use std::fmt::{Display, Formatter, Result};
 use crate::*;
-use crate::units::*;
 use std::f64::consts::PI;
 
 #[derive(Debug, Default, Copy, Clone, PartialOrd)]
@@ -226,7 +225,7 @@ mod tests {
     use super::*;
     use crate::types::Time;
 
-    type NoDimension = Scalar<crate::units::Unitless>;
+    type NoDimension = Scalar<Float>;
 
     #[test]
     fn display() {

@@ -1,5 +1,29 @@
+use crate::Float;
+use crate::scalars::Scalar;
+use crate::vectors::Vector;
+
 pub trait Unit : 'static + Send + Sync + Copy + PartialEq + Default {
-    fn symbol() -> Option<&'static str>;
+    fn symbol() -> Option<&'static str> {
+        None
+    }
+}
+
+impl Unit for Float {}
+
+pub trait Units {
+    type Output: Unit;
+
+    fn get_scalar(value: Float) -> Scalar<Self::Output> {
+        Scalar::from(value)
+    }
+
+    fn get_vector(x: Float, y: Float) -> Vector<Self::Output> {
+        Vector::from((x, y))
+    }
+}
+
+impl<T: Unit> Units for T {
+    type Output = T;
 }
 
 macro_rules! define_unit {
@@ -21,7 +45,6 @@ macro_rules! define_unit {
     )
 }
 
-define_unit!(Unitless);
 define_unit!(Seconds, "s");
 define_unit!(SecondsSquared, "s²");
 define_unit!(Kilograms, "kg");

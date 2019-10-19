@@ -1,4 +1,4 @@
-use units::Unit;
+use units::*;
 use scalars::Scalar;
 use vectors::Vector;
 pub use types::*;
