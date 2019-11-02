@@ -9,4 +9,4 @@ mod vectors;
 mod conversion;
 mod types;
 
-pub type Float = f32;
+pub type Float = f64;
