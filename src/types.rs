@@ -30,6 +30,7 @@ pub type Volume = Scalar<MetersCubed>;
 pub type Density = Scalar<KilogramsPerMeterCubed>;
 
 pub type Resolution = Vector<Pixels>;
+pub type ResolutionScalar = Scalar<Pixels>;
 pub type Scale = Scalar<MetersPerPixel>;
 
 pub type Angle = Scalar<Radians>;
