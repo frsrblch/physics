@@ -12,11 +12,10 @@ pub struct Scalar<T> {
 
 impl<T: Unit> Display for Scalar<T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        match (T::symbol(), f.precision()) {
-            (Some(symbol), None) => write!(f, "{} {}", self.value, symbol),
-            (None, None) => write!(f, "{}", self.value),
-            (Some(symbol), Some(p)) => write!(f, "{:.*} {}", p, self.value, symbol),
-            (None, Some(p)) => write!(f, "{:.*}", p, self.value),
+        let precision = f.precision().unwrap_or(2);
+        match T::symbol() {
+            Some(symbol) => write!(f, "{:.*} {}", precision, self.value, symbol),
+            None => write!(f, "{:.*}", precision, self.value),
         }
     }
 }
