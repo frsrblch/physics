@@ -77,7 +77,6 @@ impl<T: Unit> Display for Vector<T> {
             None => write!(f, "({}, {})", self.x, self.y),
             Some(p) => write!(f, "({:.p$}, {:.p$})", self.x, self.y, p=p)
         }
-
     }
 }
 
