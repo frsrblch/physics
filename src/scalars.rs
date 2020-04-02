@@ -11,6 +11,7 @@ pub struct Scalar<T> {
 }
 
 impl<T: Unit> Display for Scalar<T> {
+    #[inline]
     fn fmt(&self, f: &mut Formatter) -> Result {
         let precision = f.precision().unwrap_or(2);
         match T::symbol() {
