@@ -12,9 +12,10 @@ pub struct Scalar<T> {
 
 impl<T: Unit> Display for Scalar<T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
+        let precision = f.precision().unwrap_or(2);
         match T::symbol() {
-            Some(symbol) => write!(f, "{} {}", self.value, symbol),
-            None => write!(f, "{}", self.value),
+            Some(symbol) => write!(f, "{:.*} {}", precision, self.value, symbol),
+            None => write!(f, "{:.*}", precision, self.value),
         }
     }
 }
@@ -271,6 +272,12 @@ mod tests {
 
         let dimensionless = NoDimension::from(1.25);
         assert_eq!("1.25", dimensionless.to_string());
+    }
+
+    #[test]
+    fn display_precision() {
+        let time = Time::from(1.111111);
+        assert_eq!("1.11 s", &format!("{:.2}", time));
     }
 
     #[test]

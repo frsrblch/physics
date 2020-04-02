@@ -93,7 +93,8 @@ impl Vector<Pixels> {
 impl<T: Unit> Display for Vector<T> {
     #[inline]
     fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "({}, {})", self.x, self.y)
+        let precision = f.precision().unwrap_or(2);
+        write!(f, "({:.p$}, {:.p$})", self.x, self.y, p=precision)
     }
 }
 
@@ -223,7 +224,14 @@ mod tests {
     fn display() {
         let position = Position::new(1.5, 2.5);
 
-        assert_eq!("(1.5 m, 2.5 m)", position.to_string());
+        assert_eq!("(1.50 m, 2.50 m)", position.to_string());
+    }
+
+    #[test]
+    fn display_precision() {
+        let position = Position::new(1.44444, 2.555555);
+
+        assert_eq!("(1.4 m, 2.6 m)", format!("{:.1}", position));
     }
 
     #[test]
