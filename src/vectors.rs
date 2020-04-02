@@ -10,24 +10,29 @@ pub struct Vector<T> {
 }
 
 impl<T> Vector<T> {
+    #[inline]
     fn new<U: Into<Scalar<T>>>(x: U, y: U) -> Vector<T> {
         Vector { x: x.into(), y: y.into() }
     }
 
-    pub fn zero() -> Vector<T> {
-        Vector::new(0.0, 0.0)
+    #[inline]
+    pub const fn zero() -> Vector<T> {
+        Vector { x: Scalar::zero(), y: Scalar::zero() }
     }
 
+    #[inline]
     pub fn magnitude(&self) -> Scalar<T> {
         self.magnitude_squared().sqrt().into()
     }
 
+    #[inline]
     pub fn magnitude_squared(&self) -> Float {
         self.x.value.powi(2) + self.y.value.powi(2)
     }
 }
 
 impl<T: Unit> Vector<T> {
+    #[inline]
     pub fn unit_vector(self) -> Option<UnitVector> {
         match self == Self::zero() {
             true => None,
@@ -38,6 +43,7 @@ impl<T: Unit> Vector<T> {
         }
     }
 
+    #[inline]
     pub fn rotate_cw(&self, angle: Angle) -> Self {
         let cos = angle.cos();
         let sin = angle.sin();
@@ -45,39 +51,54 @@ impl<T: Unit> Vector<T> {
         let y = sin * self.x + cos * self.y;
         Vector::new(x, y)
     }
+
+    #[inline]
+    pub fn from_magnitude_and_angle(magnitude: Scalar<T>, angle: Angle) -> Self {
+        let cos = angle.cos();
+        let sin = angle.sin();
+        let x = -sin * magnitude;
+        let y = cos * magnitude;
+        Vector::new(x, y)
+    }
 }
 
 impl Vector<Meters> {
+    #[inline]
     pub fn in_meters<T: Into<Scalar<Meters>>>(x: T, y: T) -> Position {
         Vector::new(x, y)
     }
 }
 
 impl Vector<MetersPerSecond> {
+    #[inline]
     pub fn in_meters_per_second<T: Into<Scalar<MetersPerSecond>>>(x: T, y: T) -> Velocity {
         Vector::new(x, y)
     }
 }
 
 impl Vector<MetersPerSecondSquared> {
+    #[inline]
     pub fn in_meters_per_second_squared<T: Into<Scalar<MetersPerSecondSquared>>>(x: T, y: T) -> Acceleration {
         Vector::new(x, y)
     }
 }
 
 impl Vector<Pixels> {
+    #[inline]
     pub fn in_pixels<T: Into<Scalar<Pixels>>>(x: T, y: T) -> Resolution {
         Vector::new(x, y)
     }
 }
 
 impl<T: Unit> Display for Vector<T> {
+    #[inline]
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "({}, {})", self.x, self.y)
     }
 }
 
 impl<T, U: Into<Scalar<T>>> From<(U, U)> for Vector<T> {
+    #[inline]
     fn from((x, y): (U, U)) -> Vector<T> {
         Vector::new(x, y)
     }
@@ -85,6 +106,7 @@ impl<T, U: Into<Scalar<T>>> From<(U, U)> for Vector<T> {
 
 impl<T> Neg for Vector<T> {
     type Output = Self;
+    #[inline]
     fn neg(self) -> Self::Output {
         self * -1.0
     }
@@ -93,12 +115,14 @@ impl<T> Neg for Vector<T> {
 impl<T> Add for Vector<T> {
     type Output = Self;
 
+    #[inline]
     fn add(self, rhs: Self) -> Self {
         Vector::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
 
 impl<T> AddAssign for Vector<T> {
+    #[inline]
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
@@ -107,12 +131,14 @@ impl<T> AddAssign for Vector<T> {
 
 impl<T> Sub for Vector<T> {
     type Output = Self;
+    #[inline]
     fn sub(self, rhs: Self) -> Self {
         Vector::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
 
 impl<T> SubAssign for Vector<T> {
+    #[inline]
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y;
@@ -121,6 +147,7 @@ impl<T> SubAssign for Vector<T> {
 
 impl<T> Mul<Vector<T>> for Float {
     type Output = Vector<T>;
+    #[inline]
     fn mul(self, rhs: Vector<T>) -> Vector<T> {
         Vector::new(self * rhs.x, self * rhs.y)
     }
@@ -128,12 +155,14 @@ impl<T> Mul<Vector<T>> for Float {
 
 impl<T> Mul<Float> for Vector<T> {
     type Output = Self;
+    #[inline]
     fn mul(self, rhs: Float) -> Self {
         Vector::new(self.x * rhs, self.y * rhs)
     }
 }
 
 impl<T> MulAssign<Float> for Vector<T> {
+    #[inline]
     fn mul_assign(&mut self, rhs: Float) {
         self.x *= rhs;
         self.y *= rhs;
@@ -142,6 +171,7 @@ impl<T> MulAssign<Float> for Vector<T> {
 
 impl<T> Div<Float> for Vector<T> {
     type Output = Self;
+    #[inline]
     fn div(self, rhs: Float) -> Self {
         Vector::new(self.x / rhs, self.y / rhs)
     }
@@ -149,12 +179,14 @@ impl<T> Div<Float> for Vector<T> {
 
 impl<T> Div<Scalar<T>> for Vector<T> {
     type Output = Vector<Float>;
+    #[inline]
     fn div(self, rhs: Scalar<T>) -> Self::Output {
         Vector::from((self.x.value / rhs.value, self.y.value / rhs.value))
     }
 }
 
 impl<T> DivAssign<Float> for Vector<T> {
+    #[inline]
     fn div_assign(&mut self, rhs: Float) {
         self.x /= rhs;
         self.y /= rhs;
@@ -163,6 +195,7 @@ impl<T> DivAssign<Float> for Vector<T> {
 
 impl<T> Mul<UnitVector> for Scalar<T> {
     type Output = Vector<T>;
+    #[inline]
     fn mul(self, rhs: UnitVector) -> Self::Output {
         Vector::new(self.value * rhs.x.value, self.value * rhs.y.value)
     }
@@ -170,6 +203,7 @@ impl<T> Mul<UnitVector> for Scalar<T> {
 
 impl<T> Mul<Scalar<T>> for UnitVector {
     type Output = Vector<T>;
+    #[inline]
     fn mul(self, rhs: Scalar<T>) -> Self::Output {
         rhs * self
     }

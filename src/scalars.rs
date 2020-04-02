@@ -20,29 +20,34 @@ impl<T: Unit> Display for Scalar<T> {
 }
 
 impl<T> Scalar<T> {
-    fn new(value: Float) -> Self {
+    #[inline]
+    pub(crate) const fn new(value: Float) -> Self {
         Scalar { value, marker: PhantomData }
     }
 
-    pub fn zero() -> Self {
+    #[inline]
+    pub const fn zero() -> Self {
         Self::new(0.0)
     }
 }
 
 impl<T> Neg for Scalar<T> {
     type Output = Self;
+    #[inline]
     fn neg(self) -> Self::Output {
         self * -1.0
     }
 }
 
 impl<T> From<Float> for Scalar<T> {
+    #[inline]
     fn from(value: Float) -> Self {
         Self::new(value)
     }
 }
 
 impl<T> PartialEq for Scalar<T> {
+    #[inline]
     fn eq(&self, rhs: &Self) -> bool {
         self.value == rhs.value
     }
@@ -50,12 +55,14 @@ impl<T> PartialEq for Scalar<T> {
 
 impl<T> Add for Scalar<T> {
     type Output = Scalar<T>;
+    #[inline]
     fn add(self, rhs: Self) -> Self {
         Scalar::from(self.value + rhs.value)
     }
 }
 
 impl<T> AddAssign for Scalar<T> {
+    #[inline]
     fn add_assign(&mut self, rhs: Self) {
         self.value += rhs.value
     }
@@ -63,12 +70,14 @@ impl<T> AddAssign for Scalar<T> {
 
 impl<T> Sub for Scalar<T> {
     type Output = Scalar<T>;
+    #[inline]
     fn sub(self, rhs: Self) -> Self {
         Scalar::from(self.value - rhs.value)
     }
 }
 
 impl<T> SubAssign for Scalar<T> {
+    #[inline]
     fn sub_assign(&mut self, rhs: Self) {
         self.value -= rhs.value
     }
@@ -76,6 +85,7 @@ impl<T> SubAssign for Scalar<T> {
 
 impl<T> Mul<Float> for Scalar<T> {
     type Output = Scalar<T>;
+    #[inline]
     fn mul(self, rhs: Float) -> Self {
         Scalar::from(self.value * rhs)
     }
@@ -83,12 +93,14 @@ impl<T> Mul<Float> for Scalar<T> {
 
 impl<T> Mul<Scalar<T>> for Float {
     type Output = Scalar<T>;
+    #[inline]
     fn mul(self, rhs: Scalar<T>) -> Scalar<T> {
         rhs * self
     }
 }
 
 impl<T> MulAssign<Float> for Scalar<T> {
+    #[inline]
     fn mul_assign(&mut self, rhs: Float) {
         self.value *= rhs;
     }
@@ -96,6 +108,7 @@ impl<T> MulAssign<Float> for Scalar<T> {
 
 impl<T> Div<Float> for Scalar<T> {
     type Output = Scalar<T>;
+    #[inline]
     fn div(self, rhs: Float) -> Self {
         Scalar::from(self.value / rhs)
     }
@@ -103,118 +116,142 @@ impl<T> Div<Float> for Scalar<T> {
 
 impl<T> Div<Self> for Scalar<T> {
     type Output = Float;
+    #[inline]
     fn div(self, rhs: Self) -> Self::Output {
         self.value / rhs.value
     }
 }
 
 impl<T> DivAssign<Float> for Scalar<T> {
+    #[inline]
     fn div_assign(&mut self, rhs: Float) {
         self.value /= rhs;
     }
 }
 
 impl Scalar<Seconds> {
+    #[inline]
     pub fn in_seconds(value: Float) -> Self {
         Self::new(value)
     }
 
+    #[inline]
     pub fn in_minutes(value: Float) -> Self {
         Time::in_seconds(value * 60.0)
     }
 
+    #[inline]
     pub fn in_hours(value: Float) -> Self {
         Time::in_minutes(value * 60.0)
     }
 
+    #[inline]
     pub fn in_days(value: Float) -> Self {
         Time::in_hours(value * 24.0)
     }
 
+    #[inline]
     pub fn in_years(value: Float) -> Self {
         Time::in_days(value * 365.25)
     }
 }
 
 impl Scalar<Kilograms> {
+    #[inline]
     pub fn in_kilograms(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<Meters> {
+    #[inline]
     pub fn in_meters(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<MetersPerSecond> {
+    #[inline]
     pub fn in_meters_per_second(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<Kelvin> {
+    #[inline]
     pub fn in_kelvin(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<Newtons> {
+    #[inline]
     pub fn in_newtons(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<Joules> {
+    #[inline]
     pub fn in_joules(value: Float) -> Self {
         value.into()
     }
 
+    #[inline]
     pub fn in_kilocalories(value: Float) -> Self {
         (value * 4184.0).into()
     }
 }
 
 impl Scalar<JoulesPerKilogram> {
+    #[inline]
     pub fn in_joules_per_kilogram(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<JoulesPerSecond> {
+    #[inline]
     pub fn in_joules_per_second(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<MetersSquared> {
+    #[inline]
     pub fn in_meters_squared(value: Float) -> Self { value.into() }
 }
 
 impl Scalar<MetersCubed> {
+    #[inline]
     pub fn in_meters_cubed(value: Float) -> Self { value.into() }
 }
 
 impl Scalar<KilogramsPerMeterCubed> {
+    #[inline]
     pub fn in_kilograms_per_meter_cubed(value: Float) -> Self {
         value.into()
     }
 }
 
 impl Scalar<Radians> {
+    #[inline]
     pub fn in_radians(angle: Float) -> Self { angle.into() }
 
+    #[inline]
     pub fn in_degrees(angle: Float) -> Self { Self::in_radians(angle * (PI as Float) / 180.0) }
 
+    #[inline]
     pub fn sin(&self) -> Float {
         self.value.sin()
     }
 
+    #[inline]
     pub fn cos(&self) -> Float {
         self.value.cos()
     }
 
+    #[inline]
     pub fn tan(&self) -> Float {
         self.value.tan()
     }

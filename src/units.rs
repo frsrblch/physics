@@ -3,6 +3,7 @@ use crate::scalars::Scalar;
 use crate::vectors::Vector;
 
 pub trait Unit : 'static + Send + Sync + Copy + PartialEq + Default {
+    #[inline]
     fn symbol() -> Option<&'static str> {
         None
     }
@@ -13,10 +14,12 @@ impl Unit for Float {}
 pub trait Units {
     type Output: Unit;
 
+    #[inline]
     fn get_scalar(value: Float) -> Scalar<Self::Output> {
         Scalar::from(value)
     }
 
+    #[inline]
     fn get_vector(x: Float, y: Float) -> Vector<Self::Output> {
         Vector::from((x, y))
     }
@@ -32,6 +35,7 @@ macro_rules! define_unit {
         pub struct $unit;
 
         impl Unit for $unit {
+            #[inline]
             fn symbol() -> Option<&'static str> { None }
         }
     );
@@ -40,6 +44,7 @@ macro_rules! define_unit {
         pub struct $unit;
 
         impl Unit for $unit {
+            #[inline]
             fn symbol() -> Option<&'static str> { Some($symbol) }
         }
     )

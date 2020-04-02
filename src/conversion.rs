@@ -7,6 +7,7 @@ macro_rules! divide_convert_scalars {
     ($numerator:ty, $denominator:ty, $result:ty) => (
         impl Div<Scalar<$denominator>> for Scalar<$numerator> {
             type Output = Scalar<$result>;
+            #[inline]
             fn div(self, rhs: Scalar<$denominator>) -> Self::Output {
                 Self::Output::from(self.value / rhs.value)
             }
@@ -14,6 +15,7 @@ macro_rules! divide_convert_scalars {
 
         impl Div<Scalar<$result>> for Scalar<$numerator> {
             type Output = Scalar<$denominator>;
+            #[inline]
             fn div(self, rhs: Scalar<$result>) -> Self::Output {
                 Self::Output::from(self.value / rhs.value)
             }
@@ -21,6 +23,7 @@ macro_rules! divide_convert_scalars {
 
         impl Mul<Scalar<$denominator>> for Scalar<$result> {
             type Output = Scalar<$numerator>;
+            #[inline]
             fn mul(self, rhs: Scalar<$denominator>) -> Self::Output {
                 Self::Output::from(self.value * rhs.value)
             }
@@ -28,6 +31,7 @@ macro_rules! divide_convert_scalars {
 
         impl Mul<Scalar<$result>> for Scalar<$denominator> {
             type Output = Scalar<$numerator>;
+            #[inline]
             fn mul(self, rhs: Scalar<$result>) -> Self::Output {
                 Self::Output::from(self.value * rhs.value)
             }
@@ -39,6 +43,7 @@ macro_rules! divide_convert_vectors {
     ($numerator:ty, $denominator:ty, $result:ty) => (
         impl Div<Scalar<$denominator>> for Vector<$numerator> {
             type Output = Vector<$result>;
+            #[inline]
             fn div(self, rhs: Scalar<$denominator>) -> Self::Output {
                 Self::Output::from((self.x / rhs, self.y / rhs))
             }
@@ -46,6 +51,7 @@ macro_rules! divide_convert_vectors {
 
         impl Mul<Scalar<$denominator>> for Vector<$result> {
             type Output = Vector<$numerator>;
+            #[inline]
             fn mul(self, rhs: Scalar<$denominator>) -> Self::Output {
                 Self::Output::from((self.x * rhs, self.y * rhs))
             }
@@ -53,6 +59,7 @@ macro_rules! divide_convert_vectors {
 
         impl Mul<Vector<$result>> for Scalar<$denominator> {
             type Output = Vector<$numerator>;
+            #[inline]
             fn mul(self, rhs: Vector<$result>) -> Self::Output {
                 Self::Output::from((self * rhs.x, self * rhs.y))
             }
@@ -71,6 +78,7 @@ macro_rules! squares_scalar {
     ($normal:ty, $squared:ty) => (
         impl Mul for Scalar<$normal> {
             type Output = Scalar<$squared>;
+            #[inline]
             fn mul(self, rhs: Self) -> Self::Output {
                 Self::Output::from(self.value * rhs.value)
             }
@@ -78,6 +86,7 @@ macro_rules! squares_scalar {
 
         impl Div<Scalar<$normal>> for Scalar<$squared> {
             type Output = Scalar<$normal>;
+            #[inline]
             fn div(self, rhs: Scalar<$normal>) -> Self::Output {
                 Self::Output::from(self.value / rhs.value)
             }
@@ -103,6 +112,7 @@ divide_convert!(Radians, Seconds, RadiansPerSecond);
 
 impl Div<Scalar<MetersPerPixel>> for Vector<Meters> {
     type Output = Vector<Pixels>;
+    #[inline]
     fn div(self, rhs: Scalar<MetersPerPixel>) -> Self::Output {
         Self::Output::from((self.x.value / rhs.value, self.y.value / rhs.value))
     }
@@ -110,6 +120,7 @@ impl Div<Scalar<MetersPerPixel>> for Vector<Meters> {
 
 impl Mul<Scalar<MetersPerPixel>> for Vector<Pixels> {
     type Output = Vector<Meters>;
+    #[inline]
     fn mul(self, rhs: Scalar<MetersPerPixel>) -> Self::Output {
         Self::Output::from((self.x.value * rhs.value, self.y.value * rhs.value))
     }
