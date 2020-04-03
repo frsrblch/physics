@@ -34,12 +34,11 @@ impl<T> Vector<T> {
 impl<T: Unit> Vector<T> {
     #[inline]
     pub fn unit_vector(self) -> Option<UnitVector> {
-        match self == Self::zero() {
-            true => None,
-            false => {
-                let m = self.magnitude();
-                Some(Vector::new(self.x / m, self.y / m))
-            }
+        if self == Self::zero() {
+            None
+        } else {
+            let m = self.magnitude();
+            Some(Vector::new(self.x / m, self.y / m))
         }
     }
 
@@ -59,6 +58,23 @@ impl<T: Unit> Vector<T> {
         let x = -sin * magnitude;
         let y = cos * magnitude;
         Vector::new(x, y)
+    }
+
+    #[inline]
+    pub fn get_angle(self) -> Option<Angle> {
+        if self == Self::zero() {
+            return None;
+        }
+
+        match (self.x.value, self.y.value) {
+            (x, y) if x < 0.0 && y < 0.0 => Some(self.atan() - Angle::in_degrees(180.0)),
+            (_, y) if y < 0.0 => Some(Angle::in_degrees(180.0) + self.atan()),
+            _ => Some(self.atan())
+        }
+    }
+
+    fn atan(self) -> Angle {
+        Angle::in_radians((self.x / self.y).atan())
     }
 }
 
@@ -403,5 +419,50 @@ mod tests {
 
         assert_eq!(position, length * unit_vector);
         assert_eq!(position, unit_vector * length);
+    }
+
+    #[test]
+    fn get_angle_from_zero_returns_none() {
+        assert_eq!(None, Position::in_meters(0.0, 0.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_0_1() {
+        assert_eq!(Some(Angle::in_degrees(0.0)), Position::in_meters(0.0, 1.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_1_1() {
+        assert_eq!(Some(Angle::in_degrees(45.0)), Position::in_meters(1.0, 1.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_1_0() {
+        assert_eq!(Some(Angle::in_degrees(90.0)), Position::in_meters(1.0, 0.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_1_n1() {
+        assert_eq!(Some(Angle::in_degrees(135.0)), Position::in_meters(1.0, -1.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_0_n1() {
+        assert_eq!(Some(Angle::in_degrees(180.0)), Position::in_meters(0.0, -1.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_n1_n1() {
+        assert_eq!(Some(Angle::in_degrees(-135.0)), Position::in_meters(-1.0, -1.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_n1_0() {
+        assert_eq!(Some(Angle::in_degrees(-90.0)), Position::in_meters(-1.0, 0.0).get_angle());
+    }
+
+    #[test]
+    fn get_angle_n1_1() {
+        assert_eq!(Some(Angle::in_degrees(-45.0)), Position::in_meters(-1.0, 1.0).get_angle());
     }
 }
