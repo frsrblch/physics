@@ -53,6 +53,7 @@ impl<T: Unit> Vector<T> {
 
     #[inline]
     pub fn from_magnitude_and_angle(magnitude: Scalar<T>, angle: Angle) -> Self {
+        let angle = -angle;
         let cos = angle.cos();
         let sin = angle.sin();
         let x = -sin * magnitude;
@@ -472,5 +473,13 @@ mod tests {
     #[test]
     fn get_angle_n1_1() {
         assert_eq!(Some(Angle::in_degrees(-45.0)), Position::in_meters(-1.0, 1.0).get_angle());
+    }
+
+    #[test]
+    fn vector_from_angle_has_expected_angle() {
+        let angle = Angle::in_degrees(35.0);
+        let pos = Position::from_magnitude_and_angle(Length::in_meters(3.0), angle);
+
+        assert_eq!(pos.get_angle(), Some(angle));
     }
 }
