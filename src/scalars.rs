@@ -1,6 +1,6 @@
 use std::ops::*;
 use std::marker::PhantomData;
-use std::fmt::{Display, Formatter, Result};
+use std::fmt::{Display, Formatter, Result, LowerExp};
 use crate::*;
 use std::f64::consts::PI;
 
@@ -14,10 +14,28 @@ impl<T: Unit> Display for Scalar<T> {
     #[inline]
     fn fmt(&self, f: &mut Formatter) -> Result {
         let precision = f.precision().unwrap_or(2);
-        match T::symbol() {
-            Some(symbol) => write!(f, "{:.*} {}", precision, self.value, symbol),
-            None => write!(f, "{:.*}", precision, self.value),
+
+        write!(f, "{:.*}", precision, self.value)?;
+
+        for s in T::symbol() {
+            let _ = write!(f, " {}", s);
         }
+
+        Ok(())
+    }
+}
+
+impl<T: Unit> LowerExp for Scalar<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let precision = f.precision().unwrap_or(2);
+
+        write!(f, "{:.*e}", precision, self.value)?;
+
+        for s in T::symbol() {
+            let _ = write!(f, " {}", s);
+        }
+
+        Ok(())
     }
 }
 
@@ -279,6 +297,26 @@ mod tests {
     fn display_precision() {
         let time = Time::from(1.111111);
         assert_eq!("1.11 s", &format!("{:.2}", time));
+    }
+
+    #[test]
+    fn display_precision_exp_2() {
+        assert_eq!("250.00 m", &format!("{:.2}", Length::in_meters(250e0)));
+        assert_eq!("25.00 m", &format!("{:.2}", Length::in_meters(250e-1)));
+        assert_eq!("2.50 m", &format!("{:.2}", Length::in_meters(250e-2)));
+        assert_eq!("0.25 m", &format!("{:.2}", Length::in_meters(250e-3)));
+    }
+
+    #[test]
+    fn display_precision_exp_4() {
+        assert_eq!("2.5000e8 m", &format!("{:.4e}", Length::in_meters(250e6)));
+        assert_eq!("2.5000e7 m", &format!("{:.4e}", Length::in_meters(250e5)));
+        assert_eq!("2.5000e6 m", &format!("{:.4e}", Length::in_meters(250e4)));
+        assert_eq!("2.5000e5 m", &format!("{:.4e}", Length::in_meters(250e3)));
+        assert_eq!("2.5000e4 m", &format!("{:.4e}", Length::in_meters(250e2)));
+        assert_eq!("2.5000e-2 m", &format!("{:.4e}", Length::in_meters(250e-4)));
+        assert_eq!("2.5000e-3 m", &format!("{:.4e}", Length::in_meters(250e-5)));
+        assert_eq!("2.5000e-4 m", &format!("{:.4e}", Length::in_meters(250e-6)));
     }
 
     #[test]

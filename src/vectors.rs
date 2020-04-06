@@ -1,5 +1,5 @@
 use std::ops::*;
-use std::fmt::{Display, Formatter, Result};
+use std::fmt::{Display, Formatter, Result, LowerExp};
 use crate::*;
 use crate::types::UnitVector;
 
@@ -111,6 +111,14 @@ impl<T: Unit> Display for Vector<T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         let precision = f.precision().unwrap_or(2);
         write!(f, "({:.p$}, {:.p$})", self.x, self.y, p=precision)
+    }
+}
+
+impl<T: Unit> LowerExp for Vector<T> {
+    #[inline]
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        let precision = f.precision().unwrap_or(2);
+        write!(f, "({:.p$e}, {:.p$e})", self.x, self.y, p=precision)
     }
 }
 
